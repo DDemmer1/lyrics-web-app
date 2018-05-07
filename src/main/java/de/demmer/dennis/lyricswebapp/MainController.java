@@ -2,6 +2,8 @@ package de.demmer.dennis.lyricswebapp;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -10,10 +12,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class MainController {
 
 
-    @RequestMapping("/")
+    @GetMapping(value = "lyrics/{id}")
     @ResponseBody
-    String home() {
-        return "Hello World!";
+    String home(@PathVariable("id") String id) {
+        System.out.println(id);
+        return id;
     }
 
 }
