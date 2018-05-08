@@ -63,9 +63,16 @@
             <artifactId>lucene-queries</artifactId>
             <version>7.3.0</version>
         </dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-classification -->
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-classification</artifactId>
+			<version>7.3.0</version>
+		</dependency>
 
 
-    </dependencies>
+
+	</dependencies>
 
 	<build>
 		<plugins>

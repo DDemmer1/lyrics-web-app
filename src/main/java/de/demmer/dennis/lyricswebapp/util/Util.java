@@ -13,7 +13,7 @@ public class Util {
 
 
         try {
-            FileInputStream streamIn = new FileInputStream("songs.ser");
+            FileInputStream streamIn = new FileInputStream("songsTrain.ser");
             ModifiedObjectInputStream objectinputstream = new ModifiedObjectInputStream(streamIn);
             List<Song> songs = (List<Song>) objectinputstream.readObject();
             objectinputstream .close();
