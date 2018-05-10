@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @EnableAutoConfiguration
@@ -22,7 +23,7 @@ public class MainController {
     @GetMapping(value = "search/{query}")
     @ResponseBody
     String home(@PathVariable("query") String query) {
-        List<Song> songs = null;
+        Map<Song,List<String>> songs = null;
         try {
             songs = LuceneUtil.search(query, "artist");
         } catch (IOException e) {
@@ -33,11 +34,18 @@ public class MainController {
 
         if (songs != null) {
             StringBuffer buffer = new StringBuffer();
-            for (Song song : songs) {
-                buffer.append(song.getArtist() + "\n | " + song.getSongName() + "\n | " + song.getGenre() + "\n" + "<br>");
+
+            for(Map.Entry<Song,List<String>> entry : songs.entrySet()) {
+                Song song = entry.getKey();
+                List<String> classes = entry.getValue();
+                buffer.append(song.getArtist() + "\n | "
+                            + song.getSongName() + "\n | "
+                            + song.getGenre() + "\n | "
+                            + classes.toString() + "<br>");
             }
             System.out.println(songs.size()+ " Matches found!");
             return buffer.toString();
+
         } else{
             return "No matches found!";
         }

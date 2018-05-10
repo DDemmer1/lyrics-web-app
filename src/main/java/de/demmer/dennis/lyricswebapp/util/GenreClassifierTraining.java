@@ -15,6 +15,7 @@ import org.apache.lucene.util.BytesRef;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,25 +23,25 @@ import java.util.Map;
 public class GenreClassifierTraining {
 
 
-    public static void classifieGenre(Document doc) throws IOException {
+    public static List<String> classifieGenre(Document doc) throws IOException {
         StandardAnalyzer analyzer = new StandardAnalyzer();
 
         Directory index = new NIOFSDirectory(new File("training-index").toPath());
 
         IndexReader reader = DirectoryReader.open(index);
 
-        Map<String, Analyzer> field2analyser = new HashMap<>();
-        field2analyser.put("lyrics",analyzer);
 
-//        SimpleNaiveBayesDocumentClassifier classifier = new SimpleNaiveBayesDocumentClassifier(reader,null,"genre",field2analyser);
-        SimpleNaiveBayesClassifier classifier1 = new SimpleNaiveBayesClassifier(reader,analyzer,null,"genre","lyrics");
-        List<ClassificationResult<BytesRef>> classes = classifier1.getClasses(doc.get("lyrics"));
+        SimpleNaiveBayesClassifier classifier = new SimpleNaiveBayesClassifier(reader,analyzer,null,"genre","lyrics");
+        List<ClassificationResult<BytesRef>> classes = classifier.getClasses(doc.get("lyrics")).subList(0,1);
 
-        System.out.println("Classes found:" + classes.size());
+
+        List<String> classList = new ArrayList<>();
         for (ClassificationResult<BytesRef> resultList : classes) {
-            System.out.println(resultList.getAssignedClass().toString());
+//            System.out.println(resultList.getAssignedClass().utf8ToString());
+            classList.add(resultList.getAssignedClass().utf8ToString());
         }
 
+        return classList;
     }
 
 
