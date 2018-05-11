@@ -1,14 +1,12 @@
 package de.demmer.dennis.lyricswebapp;
 
-import de.demmer.dennis.lyricswebapp.util.lucene.LuceneUtil;
-import org.apache.lucene.document.Document;
+import de.demmer.dennis.lyricswebapp.model.Song;
+import de.demmer.dennis.lyricswebapp.model.lucene.LuceneUtil;
 import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.search.ScoreDoc;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;

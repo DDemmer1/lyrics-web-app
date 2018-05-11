@@ -1,4 +1,4 @@
-package de.demmer.dennis.lyricswebapp.util;
+package de.demmer.dennis.lyricswebapp.model.lucene;
 
 
 import org.apache.lucene.analysis.Analyzer;

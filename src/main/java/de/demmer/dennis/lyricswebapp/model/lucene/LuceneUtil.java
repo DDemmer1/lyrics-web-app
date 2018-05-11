@@ -1,27 +1,23 @@
-package de.demmer.dennis.lyricswebapp.util.lucene;
+package de.demmer.dennis.lyricswebapp.model.lucene;
 
-import de.demmer.dennis.lyricswebapp.Song;
-import de.demmer.dennis.lyricswebapp.util.GenreClassifierTraining;
+import de.demmer.dennis.lyricswebapp.model.Song;
 import de.demmer.dennis.lyricswebapp.util.Util;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.classification.SimpleNaiveBayesClassifier;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.NIOFSDirectory;
 
 
-import java.nio.file.Path;
 import java.util.*;
 
 public class LuceneUtil {

@@ -1,4 +1,4 @@
-package de.demmer.dennis.lyricswebapp;
+package de.demmer.dennis.lyricswebapp.model;
 
 import java.io.Serializable;
 import java.util.List;

@@ -1,5 +1,7 @@
 package de.demmer.dennis.lyricswebapp.util;
 
+import de.demmer.dennis.lyricswebapp.model.Song;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -16,7 +18,7 @@ public class ModifiedObjectInputStream extends ObjectInputStream {
         ObjectStreamClass resultClassDescriptor = super.readClassDescriptor();
 
             if (resultClassDescriptor.getName().equals("de.demmer.dennis.Song"))
-                resultClassDescriptor = ObjectStreamClass.lookup(de.demmer.dennis.lyricswebapp.Song.class);
+                resultClassDescriptor = ObjectStreamClass.lookup(Song.class);
 
         return resultClassDescriptor;
 

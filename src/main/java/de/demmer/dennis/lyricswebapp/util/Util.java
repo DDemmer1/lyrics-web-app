@@ -1,10 +1,9 @@
 package de.demmer.dennis.lyricswebapp.util;
 
 
-import de.demmer.dennis.lyricswebapp.Song;
+import de.demmer.dennis.lyricswebapp.model.Song;
 
 import java.io.FileInputStream;
-import java.io.ObjectInputStream;
 import java.util.List;
 
 public class Util {
