@@ -1,6 +1,7 @@
 package de.demmer.dennis.lyricswebapp.model.lucene;
 
 import de.demmer.dennis.lyricswebapp.model.Song;
+import de.demmer.dennis.lyricswebapp.util.Config;
 import de.demmer.dennis.lyricswebapp.util.Util;
 
 import java.io.File;
@@ -13,17 +14,45 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.NIOFSDirectory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
+@Component("lucene")
 public class LuceneUtil {
 
+    @Autowired
+    Config config;
 
-    public static void buildIndex() throws IOException, ParseException {
+
+    public void init(){
+//        try {
+//            buildIndex();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        config.test = "das ist ein test";
+//        if(!config.INIT_CORPUS_INDEX){
+//            System.out.println("init");
+////            buildCorpus
+//        }
+
+//        if(config.INIT_TRAINING_INDEX){
+//            buildTrainingIndex
+//        }
+    }
+
+
+    private void buildIndex() throws IOException, ParseException {
         List<Song> songs = Util.deserializeSongs();
 
         StandardAnalyzer analyzer = new StandardAnalyzer();
@@ -83,25 +112,29 @@ public class LuceneUtil {
     }
 
     //TODO autowire index
-    public static Map<Song, List<String>> search(String querystr, String field) throws IOException, ParseException {
+    public Map<Song, List<String>> search(String querystr, String field, int hitsPerPage) throws IOException, ParseException {
         StandardAnalyzer analyzer = new StandardAnalyzer();
 
         Directory index = new NIOFSDirectory(new File("index").toPath());
 
-//        Query q = new QueryParser(field, analyzer).parse(querystr+"~1");
-        Term term = new Term(field, querystr);
-        Query q = new WildcardQuery(term);
+        Query q = new QueryParser(field, analyzer).parse(querystr+"~");
+//        Term term = new Term(field, querystr);
+//        Query q = new WildcardQuery(term);
+
         // Suche
-        int hitsPerPage = 100;
+
         IndexReader reader = DirectoryReader.open(index);
         IndexSearcher searcher = new IndexSearcher(reader);
         TopDocs docs = searcher.search(q, hitsPerPage);
         ScoreDoc[] hits = docs.scoreDocs;
 
-        // Ergenisse einer Liste hinzufuegen
+
+
+        // Ergebnisse einer Liste hinzufuegen
         List<Song> songs = new ArrayList<>();
 
-        Map<Song, List<String>> searchResult = new HashMap<>();
+        // LinkedHashMap damit Reihenfolge der Einträge konstant bleibt
+        Map<Song, List<String>> searchResult = new LinkedHashMap<>();
 
         for (int i = 0; i < hits.length; ++i) {
             int docId = hits[i].doc;
