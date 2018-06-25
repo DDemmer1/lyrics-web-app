@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
-import javax.annotation.PostConstruct;
 import java.util.*;
 
 @Component("lucene")
@@ -33,13 +32,13 @@ public class LuceneUtil {
 
 
     public void init(){
-//        try {
-//            buildIndex();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            buildIndex();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 //        config.test = "das ist ein test";
 //        if(!config.INIT_CORPUS_INDEX){
 //            System.out.println("init");

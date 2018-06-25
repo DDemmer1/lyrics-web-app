@@ -15,6 +15,13 @@ import java.io.IOException;
 public class Application {
 	public static void main(String[] args) {
 //        new LuceneUtil().init();
+//		try {
+//			new LuceneUtil().buildTrainIndex();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} catch (ParseException e) {
+//			e.printStackTrace();
+//		}
 		SpringApplication.run(Application.class, args);
 
 	}

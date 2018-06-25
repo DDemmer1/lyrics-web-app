@@ -57,19 +57,19 @@
         <div class="row justify-content-center">
 
             <label class="custom-control custom-radio">
-                <input value="lyrics" name="option" type="radio" class="custom-control-input" checked/>
+                <input th:checked="${check-lyrics}" value="lyrics" name="option" type="radio" class="custom-control-input"/>
                 <span class="custom-control-indicator"></span>
                 <span class="custom-control-description">Lyrics</span>
             </label>
 
             <label class="custom-control custom-radio">
-                <input value="artist" name="option" type="radio" class="custom-control-input"/>
+                <input th:checked="${check-artist}" value="artist" name="option" type="radio" class="custom-control-input"/>
                 <span class="custom-control-indicator"></span>
                 <span class="custom-control-description">Artist</span>
             </label>
 
             <label class="custom-control custom-radio">
-                <input value="songname" name="option" type="radio" class="custom-control-input"/>
+                <input th:checked="${check-songname}" value="songname" name="option" type="radio" class="custom-control-input"/>
                 <span class="custom-control-indicator"></span>
                 <span class="custom-control-description">Song name</span>
             </label>
@@ -82,7 +82,7 @@
 <div class="container">
     <div class="well">
         <h3 th:text="${songname}">Artikel</h3>
-        <p th:text="${lyrics}">text</p>
+        <pre th:text="${lyrics}">text</pre>
     </div>
 </div>
 

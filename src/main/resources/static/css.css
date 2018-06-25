@@ -31,3 +31,8 @@ td a{
     text-decoration: none;
     color: white;
 }
+
+#bootstrap-override pre{
+    font-family: Helvetica;
+
+}

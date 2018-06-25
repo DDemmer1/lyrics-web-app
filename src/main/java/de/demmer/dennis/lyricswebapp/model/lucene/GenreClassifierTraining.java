@@ -24,12 +24,12 @@ public class GenreClassifierTraining {
 
 
     public static List<String> classifieGenre(Document doc) throws IOException {
+        //2228 Songs in list
         StandardAnalyzer analyzer = new StandardAnalyzer();
 
         Directory index = new NIOFSDirectory(new File("training-index").toPath());
 
         IndexReader reader = DirectoryReader.open(index);
-
 
         SimpleNaiveBayesClassifier classifier = new SimpleNaiveBayesClassifier(reader,analyzer,null,"genre","lyrics");
         List<ClassificationResult<BytesRef>> classes = classifier.getClasses(doc.get("lyrics")).subList(0,1);
@@ -37,7 +37,6 @@ public class GenreClassifierTraining {
 
         List<String> classList = new ArrayList<>();
         for (ClassificationResult<BytesRef> resultList : classes) {
-//            System.out.println(resultList.getAssignedClass().utf8ToString());
             classList.add(resultList.getAssignedClass().utf8ToString());
         }
 
