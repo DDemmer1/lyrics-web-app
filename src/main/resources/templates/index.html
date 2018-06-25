@@ -45,7 +45,7 @@
         <div class="row">
             <div class="col-6 mx-auto">
                 <div class="input-group">
-                    <input name="query" type="text" class="form-control" placeholder="Search for..."
+                    <input th:value="${inputval}" name="query" type="text" class="form-control" placeholder="Search for..."
                            aria-label="Search for..."/>
                     <span class="input-group-btn">
                     <button class="btn btn-secondary" type="submit">Go!</button>
@@ -57,19 +57,19 @@
         <div class="row justify-content-center">
 
             <label class="custom-control custom-radio">
-                <input value="lyrics" name="option" type="radio" class="custom-control-input" checked/>
+                <input th:checked="${checklyrics}" value="lyrics" name="option" type="radio" class="custom-control-input"/>
                 <span class="custom-control-indicator"></span>
                 <span class="custom-control-description">Lyrics</span>
             </label>
 
             <label class="custom-control custom-radio">
-                <input value="artist" name="option" type="radio" class="custom-control-input"/>
+                <input th:checked="${checkartist}" value="artist" name="option" type="radio" class="custom-control-input"/>
                 <span class="custom-control-indicator"></span>
                 <span class="custom-control-description">Artist</span>
             </label>
 
             <label class="custom-control custom-radio">
-                <input value="songname" name="option" type="radio" class="custom-control-input"/>
+                <input th:checked="${checksongName}" value="songName" name="option" type="radio" class="custom-control-input"/>
                 <span class="custom-control-indicator"></span>
                 <span class="custom-control-description">Song name</span>
             </label>
@@ -99,7 +99,7 @@
 
 
 <footer class="footer" style="background-color: darkgrey">
-    <div class="container"><p>©Dennis Demmer</p>
+    <div class="container"><p>LYRIC<i>search</i> von Dennis Demmer</p>
     </div>
 </footer>
 

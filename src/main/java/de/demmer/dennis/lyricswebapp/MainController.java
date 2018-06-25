@@ -26,7 +26,11 @@ public class MainController {
 
 
     @GetMapping(value = "/", produces = "text/html")
-    public String index() {
+    public String index(Model model) {
+        model.addAttribute("checkartist",false);
+        model.addAttribute("checklyrics",true);
+        model.addAttribute("checksongname",false);
+
         return "index";
     }
 
@@ -42,15 +46,17 @@ public class MainController {
         String option = request.getParameter("option");
 
         try {
-            System.out.println("check-" + option);
+            System.out.println("check" + option);
             songs = lucene.search(request.getParameter("query"), option, 20);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        model.addAttribute("check-artist", true);
+        model.addAttribute("check"+option, true);
         model.addAttribute("results", songs);
+        model.addAttribute("inputval",request.getParameter("query"));
+
 
         System.out.println(songs.size() + " Matches found!");
         return "index";
@@ -58,7 +64,7 @@ public class MainController {
 
 
     @GetMapping(value = "trackID/{trackID}")
-    public String detail(@PathVariable String trackID, Model model) {
+    public String detail(@PathVariable("trackID") String trackID, Model model) {
 
         System.out.println("TrackID: " + trackID);
         Map<Song, List<String>> songs = null;
@@ -71,20 +77,30 @@ public class MainController {
             e.printStackTrace();
         }
 
-        Song song = (Song) songs.keySet().toArray()[0];
+            Song song = (Song) songs.keySet().toArray()[0];
+            System.out.println(songs.size() + " Match found!");
+            System.out.println(song.getSongName());
 
-        System.out.println(songs.size() + " Match found!");
-        System.out.println(song.getSongName());
+
+            model.addAttribute("songname", song.getSongName());
+            model.addAttribute("lyrics", song.getLyrics());
+            model.addAttribute("artist", song.getArtist());
+            model.addAttribute("album", song.getAlbumName());
+            model.addAttribute("year", song.getYear());
+            model.addAttribute("genre", song.getGenre());
+            model.addAttribute("predgenre", songs.get(song).get(0));
+            model.addAttribute("checkartist", false);
+            model.addAttribute("checklyrics", true);
+            model.addAttribute("checksongName", false);
+
+//            System.out.println(lucene.getSimilar(song).size());
+            model.addAttribute("results",lucene.getSimilar(song));
 
 
-        model.addAttribute("songname", song.getSongName());
-        model.addAttribute("lyrics", song.getLyrics());
-        model.addAttribute("check-artist", true);
-        model.addAttribute("check-lyrics", false);
-        model.addAttribute("check-songname", false);
+            return "songdetail";
 
-        System.out.println(song.getLyrics());
-        return "songdetail";
+
+
     }
 
 

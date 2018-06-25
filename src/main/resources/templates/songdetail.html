@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
           integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
           crossorigin="anonymous"></link>
-    <!--<link href="css.css" rel="stylesheet"/>-->
+    <link href="../css.css" rel="stylesheet"/>
+
 
 </head>
 <body id="bootstrap-override">
@@ -41,7 +42,7 @@
 <br/>
 
 <div class="container">
-    <form method="GET" action="search">
+    <form method="GET" action="../search">
         <div class="row">
             <div class="col-6 mx-auto">
                 <div class="input-group">
@@ -57,19 +58,25 @@
         <div class="row justify-content-center">
 
             <label class="custom-control custom-radio">
-                <input th:checked="${check-lyrics}" value="lyrics" name="option" type="radio" class="custom-control-input"/>
+                <input th:checked="${checklyrics}" value="lyrics" name="option" type="radio"
+                       class="custom-control-input"/>
+                <!--<input value="lyrics" name="option" type="radio" class="custom-control-input"/>-->
                 <span class="custom-control-indicator"></span>
                 <span class="custom-control-description">Lyrics</span>
             </label>
 
             <label class="custom-control custom-radio">
-                <input th:checked="${check-artist}" value="artist" name="option" type="radio" class="custom-control-input"/>
+                <input th:checked="${checkartist}" value="artist" name="option" type="radio"
+                       class="custom-control-input"/>
+                <!--<input value="artist" name="option" type="radio" class="custom-control-input"/>-->
                 <span class="custom-control-indicator"></span>
                 <span class="custom-control-description">Artist</span>
             </label>
 
             <label class="custom-control custom-radio">
-                <input th:checked="${check-songname}" value="songname" name="option" type="radio" class="custom-control-input"/>
+                <input th:checked="${checksongName}" value="songname" name="option" type="radio"
+                       class="custom-control-input"/>
+                <!--<input value="songName" name="option" type="radio" class="custom-control-input"/>-->
                 <span class="custom-control-indicator"></span>
                 <span class="custom-control-description">Song name</span>
             </label>
@@ -78,18 +85,37 @@
 </div>
 
 
-
 <div class="container">
-    <div class="well">
-        <h3 th:text="${songname}">Artikel</h3>
-        <pre th:text="${lyrics}">text</pre>
+    <div class="well mx-auto">
+        <h3 th:text="${'Song: ' + songname}">Not Found</h3>
+        <h4 th:text="${'Artist: ' + artist}">Not Found</h4>
+        <h4 th:text="${'Album: ' + album}">Not Found</h4>
+        <h4 th:text="${'Year: ' + year}">Not Found</h4>
+        <h4 th:text="${'Genre: ' + genre}">Not Found</h4>
+        <h4 th:text="${'Predicted Genre: ' + predgenre}">Not Found</h4>
+        <pre class="text-center" th:text="${lyrics}">Not Found</pre>
     </div>
+
+    <div class="container">
+        <table class="table table-striped">
+            <tr>
+                <th>Songname</th>
+                <th>Artist</th>
+            </tr>
+            <!-- Iterieren über Ergebnisliste -->
+            <tr class="result" th:each="result : ${results}">
+                <td><a th:href="${'../trackID/' + result.getTrackID()}" th:text="${result.getSongName()}"></a></td>
+                <td><a th:href="${'../trackID/' + result.getTrackID()}" th:text="${result.getArtist()}"></a></td>
+            </tr>
+        </table>
+    </div>
+
+
 </div>
 
 
 <footer class="footer" style="background-color: darkgrey">
-    <div class="container"><p>©Dennis Demmer</p>
-    </div>
+    <div class="container"><p>LYRIC<i>search</i> von Dennis Demmer</p></div>
 </footer>
 
 

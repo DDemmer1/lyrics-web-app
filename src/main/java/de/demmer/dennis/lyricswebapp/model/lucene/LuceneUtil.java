@@ -13,11 +13,13 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.*;
+import org.apache.lucene.queries.mlt.MoreLikeThis;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.NIOFSDirectory;
+import org.apache.lucene.util.PagedBytes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +33,7 @@ public class LuceneUtil {
     Config config;
 
 
-    public void init(){
+    public void init() {
         try {
             buildIndex();
         } catch (IOException e) {
@@ -82,8 +84,8 @@ public class LuceneUtil {
         IndexWriter w = new IndexWriter(index, config);
 
         for (Song song : songs) {
-            if(!song.getGenre().equals("Non-Music")){
-            addSong(w, song);
+            if (!song.getGenre().equals("Non-Music")) {
+                addSong(w, song);
             } else {
                 System.out.println("song is 'Non-Music' genre");
             }
@@ -116,18 +118,13 @@ public class LuceneUtil {
 
         Directory index = new NIOFSDirectory(new File("index").toPath());
 
-        Query q = new QueryParser(field, analyzer).parse(querystr+"~");
-//        Term term = new Term(field, querystr);
-//        Query q = new WildcardQuery(term);
-
+        Query q = new QueryParser(field, analyzer).parse(querystr + "~");
         // Suche
 
         IndexReader reader = DirectoryReader.open(index);
         IndexSearcher searcher = new IndexSearcher(reader);
         TopDocs docs = searcher.search(q, hitsPerPage);
         ScoreDoc[] hits = docs.scoreDocs;
-
-
 
         // Ergebnisse einer Liste hinzufuegen
         List<Song> songs = new ArrayList<>();
@@ -139,24 +136,63 @@ public class LuceneUtil {
             int docId = hits[i].doc;
             Document d = searcher.doc(docId);
             List<String> styles = new ArrayList<>();
-
             List<String> classes = GenreClassifierTraining.classifieGenre(d);
-
             if (d.get("styles") != null) {
                 StringTokenizer st = new StringTokenizer(d.get("styles"));
                 while (st.hasMoreTokens()) {
                     styles.add(st.nextToken());
                 }
             }
-
             Song song = new Song(d.get("songName"), d.get("albumName"), d.get("artist"), d.get("lyrics"), d.get("genre"), styles, d.get("year"), d.get("trackID"));
             searchResult.put(song, classes);
         }
-
-
         reader.close();
-
         return searchResult;
 
+    }
+
+
+    public List<Song> getSimilar(Song song) {
+        List<Song> songs = new ArrayList<>();
+        try {
+            //DocumentID über TrackID lucene-suche heraussuchen
+            StandardAnalyzer analyzer = new StandardAnalyzer();
+            Directory index = new NIOFSDirectory(new File("index").toPath());
+            Query q = new QueryParser("trackID", analyzer).parse(song.getTrackID());
+            IndexReader reader = DirectoryReader.open(index);
+            IndexSearcher searcher = new IndexSearcher(reader);
+            TopDocs docs = searcher.search(q, 1);
+            ScoreDoc[] hits = docs.scoreDocs;
+            int docId = hits[0].doc;
+
+            //MoreLikeThis query erstellen
+            MoreLikeThis mlt = new MoreLikeThis(reader);
+            String[] fields = {"lyrics","artist"};
+            mlt.setAnalyzer(analyzer);
+            mlt.setFieldNames(fields);
+            Query mltquery = mlt.like(docId);
+
+            //6 ähnlichste Ergebnisse
+            TopDocs mltTopDocs = searcher.search(mltquery, 6);
+            ScoreDoc[] mlthits = mltTopDocs.scoreDocs;
+
+            //Die similar songs in eine Liste legen
+            for (int i = 1; i < mlthits.length; i++) {
+                int mltdocId = mlthits[i].doc;
+                Document mltd = searcher.doc(mltdocId);
+                Song mltsong = new Song(mltd.get("songName"), mltd.get("albumName"), mltd.get("artist"), mltd.get("lyrics"), mltd.get("genre"), null, mltd.get("year"), mltd.get("trackID"));
+                songs.add(mltsong);
+            }
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        return songs;
     }
 }
